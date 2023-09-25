@@ -57,7 +57,7 @@ export default function NoteForm({ noteId } : NoteFormProps) {
     } catch (error) {
       throw new Error('Failed to create note')
     }
-  }, [newTitle, newText]);
+  }, [newTitle, newText, router]);
 
   const editNote = useCallback(async () => {
     try {
@@ -73,7 +73,7 @@ export default function NoteForm({ noteId } : NoteFormProps) {
     } catch (error) {
       throw new Error('Failed to edit note')
     }
-  }, [noteId, newTitle, newText]);
+  }, [noteId, newTitle, newText, router]);
 
   const deleteNote = useCallback(async () => {
     try {
@@ -87,7 +87,7 @@ export default function NoteForm({ noteId } : NoteFormProps) {
     } catch (error) {
       throw new Error('Failed to delete note')
     }
-  }, []);
+  }, [noteId, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
