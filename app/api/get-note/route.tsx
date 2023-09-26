@@ -10,7 +10,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'noteId cannot be null' }, { status: 500 })
     }
     const note = await getNote(noteId);
-    return NextResponse.json({ data: note }, { status: 200 })
+    return NextResponse.json({ success: true, data: note }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 })
   }

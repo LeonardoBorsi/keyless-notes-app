@@ -29,7 +29,7 @@ export default function NotesList() {
     ? <div className="flex justify-center mt-40">
       <Spinner />
     </div>
-    : <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+    : <div className="grid gap-7 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
       {
         notes && notes.map(note => (
           <Link href={`/${note.id}`} key={note.id}>

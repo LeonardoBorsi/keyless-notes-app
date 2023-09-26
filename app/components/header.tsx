@@ -8,7 +8,7 @@ export default function Header() {
         <Image
           src="/logo.png"
           width={120}
-          height={50}
+          height={40}
           alt="Notes Logo"
         />
       </Link>

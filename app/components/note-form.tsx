@@ -46,14 +46,18 @@ export default function NoteForm({ noteId } : NoteFormProps) {
 
   const createNote = useCallback(async () => {
     try {
-      await fetch('/api/create-note', {
+      const response = await fetch('/api/create-note', {
         method: 'POST',
         body: JSON.stringify({
           title: newTitle,
           text: newText,
         }),
       });
-      router.push("/")
+      if((await response.json()).success) {
+        router.push("/")
+      } else {
+        throw new Error('Failed to create note')
+      }
     } catch (error) {
       throw new Error('Failed to create note')
     }
@@ -61,7 +65,7 @@ export default function NoteForm({ noteId } : NoteFormProps) {
 
   const editNote = useCallback(async () => {
     try {
-      await fetch('/api/edit-note', {
+      const response = await fetch('/api/edit-note', {
         method: 'PUT',
         body: JSON.stringify({
           id: noteId,
@@ -69,7 +73,11 @@ export default function NoteForm({ noteId } : NoteFormProps) {
           text: newText,
         }),
       });
-      router.push("/")
+      if((await response.json()).success) {
+        router.push("/")
+      } else {
+        throw new Error('Failed to edit note')
+      }
     } catch (error) {
       throw new Error('Failed to edit note')
     }
@@ -77,13 +85,17 @@ export default function NoteForm({ noteId } : NoteFormProps) {
 
   const deleteNote = useCallback(async () => {
     try {
-      await fetch('/api/delete-note', {
+      const response = await fetch('/api/delete-note', {
         method: 'DELETE',
         body: JSON.stringify({
           id: noteId,
         }),
       });
-      router.push("/")
+      if((await response.json()).success) {
+        router.push("/")
+      } else {
+        throw new Error('Failed to create note')
+      }
     } catch (error) {
       throw new Error('Failed to delete note')
     }
@@ -102,7 +114,6 @@ export default function NoteForm({ noteId } : NoteFormProps) {
         setChangesDetected(false);
       }
     }
-    console.log(newTitle,newText)
   }, 500, [newTitle, newText, note]);
   
 
@@ -150,47 +161,54 @@ export default function NoteForm({ noteId } : NoteFormProps) {
                 onChange={(e) => setNewText(e.target.value)}
               />
             </div>
-            <div className="pt-8 flex justify-between items-center">
-              <div className="font-light text-gray-400">
+            <div className="pt-8 grid grid-cols-1 md:grid-cols-2 gap-7">
+              <div>
                 {
-                  isEditing && <>
+                  isEditing && 
+                  <span className="font-light text-gray-400">
                     Last edit:
                     <span className="font-medium ml-1">
                       { note ? format(new Date(note.updatedAt), 'dd MMMM yyyy HH:mm') : '' }
                     </span>
-                  </>
+                  </span>
                 }
               </div>
-              {
-                isEditing
-                ? <div>
-                  <button
-                    className="bg-red-500 text-white hover:bg-red-400 focus:bg-red-400 active:bg-red-500 px-4 py-2 mr-3 rounded-md"
-                    onClick={deleteNote}
-                  >
-                    Delete Note
-                  </button>
-                  <button
-                    className={
-                      changesDetected
-                      ? 'bg-green-500 text-white hover:bg-green-400 focus:bg-green-400 active:bg-green-500 px-4 py-2 rounded-md'
-                      : 'bg-green-200 text-white px-4 py-2 rounded-sm'
-                    }
-                    type="submit"
-                    disabled={!changesDetected}
-                  >
-                    Save Changes
-                  </button>
-                </div>
-                : <div>
-                  <button
-                    className='bg-green-500 text-white hover:bg-green-400 focus:bg-green-400 active:bg-green-500 px-4 py-2 rounded-md'
-                    type="submit"
-                  >
-                    Create Note
-                  </button>
-                </div>
-              }
+              <div className="flex items-center justify-end">
+                {
+                  isEditing
+                  ? <div className="grid grid-cols-2">
+                    <div>
+                      <button
+                        className="bg-red-500 text-white hover:bg-red-400 focus:bg-red-400 active:bg-red-500 px-4 py-2 rounded-md truncate"
+                        onClick={deleteNote}
+                      >
+                        Delete Note
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className={
+                          changesDetected
+                          ? 'bg-green-500 text-white hover:bg-green-400 focus:bg-green-400 active:bg-green-500 px-4 py-2 rounded-md w-30 truncate'
+                          : 'bg-green-200 text-white px-4 py-2 rounded-md truncate'
+                        }
+                        type="submit"
+                        disabled={!changesDetected}
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  : <div>
+                    <button
+                      className='bg-green-500 text-white hover:bg-green-400 focus:bg-green-400 active:bg-green-500 px-4 py-2 rounded-md'
+                      type="submit"
+                    >
+                      Create Note
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
           </div>
         </form>
