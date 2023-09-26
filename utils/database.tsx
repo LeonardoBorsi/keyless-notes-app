@@ -3,19 +3,22 @@ import { open, Database } from "sqlite";
 import { CreateNoteVariables, EditNoteVariables } from "./types";
 import { getCurrentDatetime } from "./utils";
 
-//let dbConnection: Database | null = null;
+let dbConnection: Database | null = null;
 
 export const openDBConnection = async () => {
   //if (process.env.NODE_ENV === 'development') {
-    try {
-      const db: Database = await open({
-        filename: "./notes.sqlite",
-        driver: sqlite3.Database,
-      });
-      return db;
-    } catch (error) {
-      console.error("Error connecting to db:", error);
+    if (!dbConnection) {
+      try {
+        dbConnection = await open({
+          filename: "./notes.sqlite",
+          driver: sqlite3.Database,
+        });
+        await dbConnection.run("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, title TEXT, text TEXT, updatedAt DATETIME)");
+      } catch (error) {
+        console.error("Error connecting to db:", error);
+      }
     }
+    return dbConnection
   /* } else {
     if (!dbConnection) {
       console.log("CONNECTING to :memory: DB")
@@ -99,7 +102,7 @@ export const deleteNote = async (id: string) => {
   const db = await openDBConnection();
   if (db) {
     const sql = `DELETE FROM notes WHERE id = ?`;
-    
+
     await db.run(sql, [id], (err: Error | null) => { 
       if(err) {
         return err;
