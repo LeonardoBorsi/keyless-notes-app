@@ -31,7 +31,7 @@ export default function NotesList() {
     </div>
     : <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
       {
-        notes.map(note => (
+        notes && notes.map(note => (
           <Link href={`/${note.id}`} key={note.id}>
             <div className="rounded-lg shadow-md p-6 bg-white hover:bg-gray-50">
               <div className="divide-y divide-dashed">
