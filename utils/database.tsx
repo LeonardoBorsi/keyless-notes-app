@@ -7,6 +7,7 @@ let dbConnection: Database | null = null;
 
 export const openDBConnection = async () => {
   if (process.env.NODE_ENV === 'development') {
+    console.log("CONNECTING to notes.sqlite")
     try {
       const db: Database = await open({
         filename: "./notes.sqlite",
@@ -18,6 +19,7 @@ export const openDBConnection = async () => {
     }
   } else {
     if (!dbConnection) {
+      console.log("CONNECTING to :memory: DB")
       try {
         dbConnection = await open({
           filename: ":memory:",
