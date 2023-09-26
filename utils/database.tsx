@@ -81,9 +81,11 @@ export const deleteNote = async (id: string) => {
   const db = await openDBConnection();
   const sql = `DELETE FROM notes WHERE id = ?`;
 
-  await db.run(sql, [id], (err: Error | null) => { 
-    if(err) {
-      return err;
-    }
-  });
+  if (db) {
+    await db.run(sql, [id], (err: Error | null) => { 
+      if(err) {
+        return err;
+      }
+    });
+  }
 }
