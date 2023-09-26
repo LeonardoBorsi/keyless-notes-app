@@ -3,15 +3,32 @@ import { open, Database } from "sqlite";
 import { CreateNoteVariables, EditNoteVariables } from "./types";
 import { getCurrentDatetime } from "./utils";
 
+let dbConnection: Database | null = null;
+
 export const openDBConnection = async () => {
-  try {
-    const db: Database = await open({
-      filename: ":memory:",
-      driver: sqlite3.Database,
-    });
-    return db;
-  } catch (error) {
-    console.error("Error connecting to db:", error);
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const db: Database = await open({
+        filename: "./notes.sqlite",
+        driver: sqlite3.Database,
+      });
+      return db;
+    } catch (error) {
+      console.error("Error connecting to db:", error);
+    }
+  } else {
+    if (!dbConnection) {
+      try {
+        dbConnection = await open({
+          filename: ":memory:",
+          driver: sqlite3.Database,
+        });
+        await dbConnection.run("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, title TEXT, text TEXT, updatedAt DATETIME)");
+      } catch (error) {
+        console.error("Error connecting to db:", error);
+      }
+    }
+    return dbConnection;
   }
 }
 
