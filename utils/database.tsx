@@ -42,7 +42,7 @@ export const getAllNotes = async () => {
   if (db) {
     const result = await db.all("SELECT * FROM notes ORDER BY updatedAt DESC", (err: Error | null) => { 
       if(err) {
-        throw new Error(err.message);
+        return err;
       }
     });
     return result;
@@ -54,7 +54,7 @@ export const getNote = async (id: string) => {
   if (db) {
     const result = await db.get("SELECT * FROM notes WHERE id = ?", [id], (err: Error | null) => {
       if (err) {
-        throw new Error(err.message);
+        return err;
       }
     });
     return result;
@@ -73,7 +73,7 @@ export const insertNote = async ({ title, text } : CreateNoteVariables) => {
 
     await db.run(sql, values, (err: Error | null) => { 
       if(err) {
-        throw new Error(err.message);
+        return err;
       }
     });
   }
@@ -92,7 +92,7 @@ export const editNote = async ({ id, title, text } : EditNoteVariables) => {
 
     await db.run(sql, values, (err: Error | null) => { 
       if(err) {
-        throw new Error(err.message);
+        return err;
       }
     });
   }
@@ -105,7 +105,7 @@ export const deleteNote = async (id: string) => {
 
     await db.run(sql, [id], (err: Error | null) => { 
       if(err) {
-        throw new Error(err.message);
+        return err;
       }
     });
   }
