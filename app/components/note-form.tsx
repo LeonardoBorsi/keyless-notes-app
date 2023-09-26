@@ -120,7 +120,7 @@ export default function NoteForm({ noteId } : NoteFormProps) {
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      //textarea.style.height = 'auto';
       textarea.style.height = textarea.scrollHeight + 'px';
     }
   };
